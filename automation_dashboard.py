@@ -62,7 +62,16 @@ def build(root: Path, *, title: str, eyebrow: str, summary: str, repo: str, laye
     body += rk.section("All checks", rk.table(["Check", "Layer", "Severity", "Time", "Result", "Note"], rows, {4}))
     body += rk.section("How to read this", "<ul>" + "".join(f"<li>{rk.esc(n)}</li>" for n in notes) + "</ul>")
 
+    takeaways = [
+        f"{counts['passed']} of {len(executed)} checks that ran passed ({pass_rate:.0f}%), across {len(layers)} layers from API contracts to a real browser.",
+        (f"{len(failed)} check{'s' if len(failed) != 1 else ''} failed and need investigation: " + "; ".join(t["title"] for t in failed[:3]) + ("…" if len(failed) > 3 else "") + "."
+         if failed else "No check failed, so no regression was detected in this run."),
+    ]
+    if blocked:
+        takeaways.append(f"{len(blocked)} browser check{'s were' if len(blocked) != 1 else ' was'} blocked by the site's bot protection. That is an environment limit, not a product fault, so it does not fail the run.")
+    if not_configured:
+        takeaways.append(f"{len(not_configured)} check{'s' if len(not_configured) != 1 else ''} did not run because an API key or quota was unavailable; the keyless contract checks still covered that API.")
     out = root / "site"
-    rk.write(str(out / "index.html"), rk.page(title=title, eyebrow=eyebrow, summary=summary, body=body, repo=repo, verdict=verdict))
+    rk.write(str(out / "index.html"), rk.page(title=title, eyebrow=eyebrow, summary=summary, body=body, repo=repo, verdict=verdict, takeaways=takeaways))
     (out / "results.json").write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(f"dashboard: {out / 'index.html'} ({counts['passed']} passed, {len(failed)} failed, {len(blocked)} blocked)")
