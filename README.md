@@ -16,6 +16,7 @@ every run.
 | Channel RSS feed | valid Atom, 1–15 entries, newest first, media metadata | No |
 | Thumbnail CDN | JPEG formats per size, cache headers | No |
 | Data API v3 | invalid/missing key errors (keyless); video details, ISO-8601 duration, pagination without duplicates, `maxResults` cap, oEmbed vs API consistency | Partly |
+| Data API contract | the public Discovery document: `videos.list` shape, required `part`, `maxResults` caps, `order=date` and token paging, Video schema (ISO-8601 duration, uint64 view count), key and read-only scope | No |
 | Web platform | HTTP→HTTPS, HSTS, clickjacking protection, robots.txt, embed page | No |
 | UI smoke (Playwright) | watch page title and player, search results, embed player, load-time budget, accessibility basics | No |
 
@@ -39,6 +40,7 @@ export YOUTUBE_API_KEY=...                 # optional: enables the Data API chec
 python -m pytest && python tools/build_dashboard.py
 ```
 
-In CI, add `YOUTUBE_API_KEY` as a repository secret to run the Data API layer.
+In CI, add `YOUTUBE_API_KEY` as a repository secret to run the keyed Data API checks. Without it, the Data API
+contract layer still verifies the API's published methods, limits and schema on every run.
 
 Built by [Rahmadani Tyas Ningrum](https://artysficial.github.io/) · MIT licence

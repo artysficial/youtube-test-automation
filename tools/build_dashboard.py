@@ -19,12 +19,13 @@ build(
         "Channel RSS feed": "Atom validity, ordering, media metadata",
         "Thumbnail CDN": "Image formats, caching headers",
         "Data API v3": "Auth errors (keyless), video details, pagination, limits, cross-source consistency",
+        "Data API contract": "Keyless: methods, required part, maxResults caps, paging and Video schema from the Discovery document",
         "Web platform": "HTTPS, HSTS, clickjacking protection, robots.txt, embed page",
         "UI smoke (Playwright)": "Watch page, search, embed player, load budget, accessibility basics",
     },
     notes=[
         "Blocked means YouTube showed a consent wall or bot check to the CI browser. That is an environment limit, not a product defect, so it is reported separately instead of failing the build.",
-        "Not configured means the check needs a YouTube Data API key; add YOUTUBE_API_KEY as a repository secret to run them.",
+        "Not configured means the check needs a YouTube Data API key; add YOUTUBE_API_KEY as a repository secret to run them. The keyless Data API contract layer runs either way.",
         "The suite only reads public data and keeps UI traffic to a few page loads a week.",
     ],
 )
